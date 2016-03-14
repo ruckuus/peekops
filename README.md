@@ -43,7 +43,6 @@ The test will pick `.env` environment variable and use that to access the server
 - Use any tool you need and that you are comfortable with.
 - You can use `Vagrant` or `Docker` to manage virtual machines.
 - By default all port must be blocked except the one used by application.
-- Common service port (such as SSH) MUST be configured to non-default port.
 
 # Solutions
 
