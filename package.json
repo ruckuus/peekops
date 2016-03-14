@@ -13,6 +13,8 @@
   "author": "Dwi Sasongko S",
   "license": "MIT",
   "dependencies": {
-    "libnmap": "^0.2.27"
+    "dotenv": "^2.0.0",
+    "libnmap": "^0.2.27",
+    "should": "^8.2.2"
   }
 }
