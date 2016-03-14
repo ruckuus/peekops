@@ -15,6 +15,9 @@
   "dependencies": {
     "dotenv": "^2.0.0",
     "libnmap": "^0.2.27",
+    "pg": "^4.5.1",
+    "redis": "^2.4.2",
+    "request": "^2.69.0",
     "should": "^8.2.2"
   }
 }
