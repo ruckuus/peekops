@@ -7,8 +7,12 @@
     "test": "test"
   },
   "scripts": {
+    "init": "cp -av config/dotenv .env",
     "test": "mocha test/*.js"
   },
   "author": "Dwi Sasongko S",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "libnmap": "^0.2.27"
+  }
 }

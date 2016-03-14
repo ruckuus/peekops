@@ -3,7 +3,7 @@ var net = require('net');
 var assert = require('assert');
 
 var target = {
-  host: process.env.TARGET_MACHINE
+  host: process.env.APPLICATION_TARGET_MACHINE
 }
 
 describe('Application', function() {
@@ -12,7 +12,4 @@ describe('Application', function() {
     done();
   });
 
-  it('should redirect to /{country_code} properly', function(done) {
-    done();
-  });
 });
