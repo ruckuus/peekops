@@ -6,8 +6,9 @@ You will need to setup a set of servers based on the 'Architecture' section on t
 
 Commands you will need to know:
 ```
-npm run init # make sure to configure environment file properly.
-npm test
+npm install  # Install dependency
+npm run init # copy base configuration file, you will need to configure environment file properly.
+npm test     # Verify your solution.
 ```
 
 # Architecture
@@ -47,7 +48,7 @@ The test will pick `.env` environment variable and use that to access the server
 # Rule
 - Put your solutions under `solutions` directory.
 - Use any tool you need and that you are comfortable with.
-- You can use `Vagrant` or `Docker` to manage virtual machines.
+- You can use `Vagrant` or `Docker` to manage virtual machines. You can also use `Terraform` by completing `solutions/main.tf`
 - By default all port must be blocked except the one used by application.
 
 # Solutions
