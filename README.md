@@ -39,6 +39,10 @@ The test will pick `.env` environment variable and use that to access the server
      CACHE_TARGET_MACHINE=192.168.99.103
      DATABASE_TARGET_MACHINE=192.168.99.104
 ```
+# Test Cases
+- VMs/Servers setup.
+- Network and firewall configuration.
+- Code build and deployment.
 
 # Rule
 - Put your solutions under `solutions` directory.
