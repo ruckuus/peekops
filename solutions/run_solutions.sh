@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-echo 'Running'
+echo "Service Start"
+vagrant up
