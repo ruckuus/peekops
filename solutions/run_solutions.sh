@@ -179,16 +179,16 @@ log 'start'
 log "using $BOX box"
 
 log 'loading webserver'
-#load_web
+load_web
 
 log 'loading application'
-#load_app
+load_app
 
 log 'loading database'
-#load_db
+load_db
 
 log 'loading cache'
-#load_cache
+load_cache
 
 log 'preparing test unit'
 
