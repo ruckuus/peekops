@@ -77,3 +77,21 @@ echo "Setting Firewall"
       
 echo "Stop Services"              
       /etc/init.d/postfix stop    
+      
+echo "NPM things "
+      su - vagrant
+      npm init
+      npm install
+      npm instlal node-env-file
+      npm install dotenv --save
+      npm install procfile
+      npm install foobar --save --save-exact
+      npm config set save=true
+      npm config set save-exact=true
+      npm install --save --save-exact foreman
+      sudo yum -y install git-all
+      echo "WEB_TARGET_MACHINE=192.168.99.101" > /home/vartrand/.env
+      echo "APPLICATION_TARGET_MACHINE=192.168.99.102" >> /home/vartrand/.env
+      echo "CACHE_TARGET_MACHINE=192.168.99.103" >> /home/vartrand/.env
+      echo "DATABASE_TARGET_MACHINE=192.168.99.104" >> /home/vartrand/.env
+      
