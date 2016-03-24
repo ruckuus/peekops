@@ -1,3 +1,5 @@
 ---
 #main deploy
 - include: web.yml
+- include: db.yml
+- include: cache.yml

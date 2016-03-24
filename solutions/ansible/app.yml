@@ -1,0 +1,23 @@
+---
+- hosts: app
+  user: vagrant
+
+  tasks:
+    - name: set locale
+      shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+ 
+    - name: Update apt cache
+      apt: update-cache=yes
+
+    - name: Install system packages
+      apt: pkg={{ item }}
+      with_items:
+        - postgres
+        - openssh-server
+        - libpq-dev
+        - python-psycopg2
+
+# http://docs.ansible.com/ansible/npm_module.html
+
+    - name: Install "coffee-script" node.js package.
+    - npm: name=coffee-script path=/app/location

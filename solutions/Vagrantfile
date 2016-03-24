@@ -34,23 +34,25 @@ SCRIPT
 
   end
 
-  config.vm.define :app do |app|
-    # Hostname to set on the node
-    app.vm.host_name="app"
-
-    # Hostonly network interface, used for internode communication
-    app.vm.network "private_network", ip: "192.168.99.102"
-
-    app.vm.provision "shell", inline: $script
-  end
-
-  # config.vm.define :db do |db|
+  # config.vm.define :app do |app|
   #   # Hostname to set on the node
-  #   db.vm.host_name="db"
+  #   app.vm.host_name="app"
 
   #   # Hostonly network interface, used for internode communication
-  #   db.vm.network "private_network", ip: "192.168.99.104"
+  #   app.vm.network "private_network", ip: "192.168.99.102"
+
+  #   app.vm.provision "shell", inline: $script
   # end
+
+  config.vm.define :db do |db|
+    # Hostname to set on the node
+    db.vm.host_name="db"
+
+    # Hostonly network interface, used for internode communication
+    db.vm.network "private_network", ip: "192.168.99.104"
+
+    db.vm.provision "shell", inline: $script
+  end
 
   # config.vm.define :cache do |cache|
   #   # Hostname to set on the node
