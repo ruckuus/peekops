@@ -1,0 +1,15 @@
+---
+- hosts: db
+  user: vagrant
+
+## Just for setup network
+
+  tasks:
+  	- name: disabled all port
+      ufw: state=enabled policy=reject
+
+    - name: Block SSH
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: Enabled postgresql port
+      ufw: rule=allow port=5432 proto=tcp

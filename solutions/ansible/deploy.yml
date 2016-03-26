@@ -3,3 +3,5 @@
 - include: web.yml
 - include: db.yml
 - include: cache.yml
+- include: net.yml
+

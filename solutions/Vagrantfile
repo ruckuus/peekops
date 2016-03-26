@@ -54,13 +54,15 @@ SCRIPT
     db.vm.provision "shell", inline: $script
   end
 
-  # config.vm.define :cache do |cache|
-  #   # Hostname to set on the node
-  #   cache.vm.host_name="cache"
+  config.vm.define :cache do |cache|
+    # Hostname to set on the node
+    cache.vm.host_name="cache"
 
-  #   # Hostonly network interface, used for internode communication
-  #   cache.vm.network "private_network", ip: "192.168.99.103"
-  # end
+    # Hostonly network interface, used for internode communication
+    cache.vm.network "private_network", ip: "192.168.99.103"
+
+    cache.vm.provision "shell", inline: $script
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
