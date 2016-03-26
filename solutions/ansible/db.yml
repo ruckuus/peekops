@@ -3,44 +3,47 @@
   user: vagrant
 
   tasks:
-    # - name: set locale
-    #   shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+    - name: set locale
+      shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
  
-    # - name: Update apt cache
-    #   apt: update-cache=yes
+    - name: Update apt cache
+      apt: update-cache=yes
 
-    # - name: Install system packages
-    #   apt: pkg={{ item }}
-    #   with_items:
-    #     - postgresql
-    #     - libpq-dev
-    #     - python-psycopg2
+    - name: Install system packages
+      apt: pkg={{ item }}
+      with_items:
+        - postgresql
+        - libpq-dev
+        - python-psycopg2
 
-    # - name: copy listen address config
-    #   template: src=files/postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf
+    - name: copy listen address config
+      template: src=files/postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf
 
     - name: copy net config allow connect
       template: src=files/pg_hba.conf.j2 dest=/etc/postgresql/9.3/main/pg_hba.conf
 
-# - hosts: db
-#   user: vagrant
-#   #gather_facts: no
-#   become: yes
-#   become_user: postgres
+    - name: postgresql restart
+      service: name=postgresql state=restarted
 
-#   vars:
-#     dbname: postgres
-#     dbuser: postgres
-#     dbpassword: postgres
+- hosts: db
+  user: vagrant
+  #gather_facts: no
+  become: yes
+  become_user: postgres
 
-#   tasks:
-#   - name: ensure database is created
-#     postgresql_db: name={{dbname}}
+  vars:
+    dbname: postgres
+    dbuser: postgres
+    dbpassword: postgres
 
-#   - name: ensure user has access to database
-#     postgresql_user: db={{dbname}} name={{dbuser}} password={{dbpassword}} priv=ALL
+  tasks:
+  - name: ensure database is created
+    postgresql_db: name={{dbname}}
 
-#   - name: ensure user does not have unnecessary privilege
-#     postgresql_user: name={{dbuser}} role_attr_flags=NOSUPERUSER,NOCREATEDB
+  - name: ensure user has access to database
+    postgresql_user: db={{dbname}} name={{dbuser}} password={{dbpassword}} priv=ALL
+
+  - name: ensure user does not have unnecessary privilege
+    postgresql_user: name={{dbuser}} role_attr_flags=NOSUPERUSER,NOCREATEDB
 
 # vim:ft=ansible:
