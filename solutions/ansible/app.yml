@@ -4,7 +4,7 @@
 
   tasks:
     - name: set locale
-      shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+      shell: export LC_ALL="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
  
     - name: Update apt cache
       apt: update-cache=yes
@@ -12,12 +12,26 @@
     - name: Install system packages
       apt: pkg={{ item }}
       with_items:
-        - postgres
         - openssh-server
-        - libpq-dev
-        - python-psycopg2
+        - nodejs
+        - npm
 
-# http://docs.ansible.com/ansible/npm_module.html
+    - name: Install express.js forever
+      shell: npm install -g express forever
 
-    - name: Install "coffee-script" node.js package.
-    - npm: name=coffee-script path=/app/location
+    - name: Ls nodejs to node
+      shell: ln -s /usr/bin/nodejs /usr/bin/node
+
+    - name: Creates directory
+      file: path=/opt/myapp state=directory owner=vagrant group=vagrant mode=0755
+
+    - name: copy app.js
+      template: src=files/app.js.j2 dest=/opt/myapp/app.js
+
+    - name: copy packages.json
+      template: src=files/package.json.j2 dest=/opt/myapp/package.json
+
+    - name: run js
+      shell: cd /opt/myapp/ && npm install express && forever start app.js
+    
+

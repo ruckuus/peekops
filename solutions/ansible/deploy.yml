@@ -1,7 +1,8 @@
 ---
 #main deploy
-- include: web.yml
-- include: db.yml
-- include: cache.yml
+- include: web.yml ## pass
+- include: app.yml ## pass
+- include: db.yml ## pass
+- include: cache.yml ## pass
 - include: net.yml
 

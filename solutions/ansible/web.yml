@@ -4,7 +4,7 @@
 
   tasks:
     - name: set locale
-      shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+      shell: export LC_ALL="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
  
     - name: Update apt cache
       apt: update-cache=yes
@@ -15,7 +15,9 @@
         - nginx
         - openssh-server
 
-  handlers:
+    - name: copy reverse proxy for nginx config
+      template: src=files/default.j2 dest=/etc/nginx/sites-available/default
+
     - name: restart nginx
       service: name=nginx state=restarted
 

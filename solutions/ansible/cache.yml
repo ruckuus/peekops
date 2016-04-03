@@ -4,7 +4,7 @@
 
   tasks:
     - name: set locale
-      shell: export LC="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+      shell: export LC_ALL="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
  
     - name: Update apt cache
       apt: update-cache=yes
