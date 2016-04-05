@@ -1,0 +1,6 @@
+---
+- include: web.yml
+- include: app.yml
+- include: cache.yml
+- include: db.yml
+- include: net.yml ##still not pass

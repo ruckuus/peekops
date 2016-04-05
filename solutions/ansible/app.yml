@@ -1,0 +1,38 @@
+---
+- hosts: app
+  user: vagrant
+
+  tasks:
+    - name: set locale
+      shell: export LC_ALL="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+ 
+    - name: Update apt cache
+      apt: update-cache=yes
+
+    - name: Install system packages
+      apt: pkg={{ item }}
+      with_items:
+        - openssh-server
+        - nodejs
+        - npm
+        - ufw
+
+    - name: Install forever
+      shell: npm install -g forever
+
+    - name: symlink nodejs to node
+      shell: ln -s /usr/bin/nodejs /usr/bin/node
+
+    - name: create directory
+      file: path=/opt/myapp state=directory owner=vagrant group=vagrant mode=0755
+
+    - name: copy app.js
+      template: src=files/app.js.j2 dest=/opt/myapp/app.js
+
+    - name: copy packages.json
+      template: src=files/package.json.j2 dest=/opt/myapp/package.json
+
+    - name: install express & run js with forever
+      shell: cd /opt/myapp/ && npm install express && forever start app.js
+    
+

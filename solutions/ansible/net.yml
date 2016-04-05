@@ -1,0 +1,79 @@
+---
+## Just for setup network
+## https://github.com/portege/peekops/commit/b9d069971816712981778ac3ea5fb56755745c1f
+- hosts: app
+  user: vagrant
+
+  tasks:
+
+    - name: open SSH port 22
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: open SSH port 3001
+      ufw: rule=allow port=3001
+
+    - name: block port 3000
+      ufw: rule=deny port=3000
+
+    - name: block port 80
+      ufw: rule=deny port=80
+
+    - name: close all port except in the list
+      ufw: state=enabled direction=incoming policy=deny
+
+    - name: allow all outgoing traffic
+      ufw: state=enabled direction=outgoing policy=allow
+
+- hosts: web
+  user: vagrant
+
+  tasks:
+
+    - name: open SSH port 22
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: block port 3000
+      ufw: rule=deny port=3000
+
+    - name: block port 80
+      ufw: rule=allow port=80
+
+    - name: close all port except in the list
+      ufw: state=enabled direction=incoming policy=deny
+
+    - name: allow all outgoing traffic
+      ufw: state=enabled direction=outgoing policy=allow
+
+- hosts: db
+  user: vagrant
+
+  tasks:
+
+    - name: block SSH port 22
+      ufw: rule=deny port=22 proto=tcp
+
+    - name: open db port 5432
+      ufw: rule=allow port=5432 proto=tcp
+
+    - name: close all port except in the list
+      ufw: state=enabled direction=incoming policy=deny
+
+    - name: allow all outgoing traffic
+      ufw: state=enabled direction=outgoing policy=allow
+
+- hosts: cache
+  user: vagrant
+
+  tasks:
+
+    - name: block SSH port 22
+      ufw: rule=deny port=22 proto=tcp
+
+    - name: open redis port 6379
+      ufw: rule=allow port=6379 proto=tcp
+
+    - name: close all port except in the list
+      ufw: state=enabled direction=incoming policy=deny
+
+    - name: allow all outgoing traffic
+      ufw: state=enabled direction=outgoing policy=allow

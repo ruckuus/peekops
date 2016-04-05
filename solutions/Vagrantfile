@@ -9,10 +9,60 @@ Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  ## need to copy all key.pub as authorized_keys in /root/.ssh/
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/trusty64"
+
+$script = <<SCRIPT
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1IJHkh/2XGLE/dkSqUxLP9EkAGCqM3Hbdj8+Bab21K/wivvhoKssl4VlNRK5oKma3OC0Vwk7CQrCHGHcI9DQw12AVw4+SItn6G5oj2Gsw19PEbFZjUxkqdOM/ouSse+H7XO1dryJBdYQdmc5N5on4kQSqJwEbhqUooARV1y2jXH47YB3PMChlARiAaW21kex9rX0RLmN4DESZq3lVytF50Nf8MkB162dB2j6BPrMrEeRlZaUkVpw0eZNQRHD0/vMh6JZZYp5wQtrIzWYGkC68J93RLRz5LvdemW6NTNC4dUP3kMESreHo0YbMTDPjjakIHuEwi6kPFUx8wLcqWnBZ andro.medh4@gmail.com' >> /home/vagrant/.ssh/authorized_keys
+SCRIPT
+
+  config.vm.define :web do |web|
+    # Hostname to set on the node
+    web.vm.host_name="web"
+
+    # Hostonly network interface, used for internode communication
+    web.vm.network "private_network", ip: "192.168.99.101"
+
+    web.vm.provision "shell", inline: $script
+
+  end
+
+  config.vm.define :app do |app|
+    # Hostname to set on the node
+    app.vm.host_name="app"
+
+    # Hostonly network interface, used for internode communication
+    app.vm.network "private_network", ip: "192.168.99.102"
+
+    app.vm.provision "shell", inline: $script
+  end
+
+  config.vm.define :db do |db|
+    # Hostname to set on the node
+    db.vm.host_name="db"
+
+    # Hostonly network interface, used for internode communication
+    db.vm.network "private_network", ip: "192.168.99.104"
+
+    db.vm.provision "shell", inline: $script
+  end
+
+  config.vm.define :cache do |cache|
+    # Hostname to set on the node
+    cache.vm.host_name="cache"
+
+    # Hostonly network interface, used for internode communication
+    cache.vm.network "private_network", ip: "192.168.99.103"
+
+    cache.vm.provision "shell", inline: $script
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

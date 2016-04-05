@@ -5,7 +5,7 @@ var should = require('should');
 var result = []; 
 
 describe('Network', function() {
-  this.timeout(15000);
+  this.timeout(150000);
   before(function(done) {
     scan({
       range: [

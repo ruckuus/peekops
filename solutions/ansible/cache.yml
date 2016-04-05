@@ -1,0 +1,24 @@
+---
+- hosts: cache
+  user: vagrant
+
+  tasks:
+    - name: set locale
+      shell: export LC_ALL="en_US.UTF-8" && export LANGUAGE="en_US.UTF-8" && locale >> /etc/environment
+ 
+    - name: Update apt cache
+      apt: update-cache=yes
+
+    - name: Install system packages
+      apt: pkg={{ item }}
+      with_items:
+        - redis-server
+        - ufw
+
+    - name: copy redis-server config
+      template: src=files/redis.conf.j2 dest=/etc/redis/redis.conf
+
+    - name: redis restart
+      service: name=redis-server state=restarted
+
+# vim:ft=ansible:
