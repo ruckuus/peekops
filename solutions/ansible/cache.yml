@@ -13,16 +13,12 @@
       apt: pkg={{ item }}
       with_items:
         - redis-server
-        - openssh-server
+        - ufw
 
     - name: copy redis-server config
       template: src=files/redis.conf.j2 dest=/etc/redis/redis.conf
 
     - name: redis restart
       service: name=redis-server state=restarted
-
-  # handlers:
-  #   - name: redis started
-  #     service: name=redis-server state=restart
 
 # vim:ft=ansible:

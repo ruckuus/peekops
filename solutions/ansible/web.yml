@@ -14,6 +14,7 @@
       with_items:
         - nginx
         - openssh-server
+        - ufw
 
     - name: copy reverse proxy for nginx config
       template: src=files/default.j2 dest=/etc/nginx/sites-available/default

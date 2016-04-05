@@ -15,6 +15,7 @@
         - postgresql
         - libpq-dev
         - python-psycopg2
+        - ufw
 
     - name: copy listen address config
       template: src=files/postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf

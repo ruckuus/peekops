@@ -15,14 +15,15 @@
         - openssh-server
         - nodejs
         - npm
+        - ufw
 
-    - name: Install express.js forever
-      shell: npm install -g express forever
+    - name: Install forever
+      shell: npm install -g forever
 
-    - name: Ls nodejs to node
+    - name: symlink nodejs to node
       shell: ln -s /usr/bin/nodejs /usr/bin/node
 
-    - name: Creates directory
+    - name: create directory
       file: path=/opt/myapp state=directory owner=vagrant group=vagrant mode=0755
 
     - name: copy app.js
@@ -31,7 +32,7 @@
     - name: copy packages.json
       template: src=files/package.json.j2 dest=/opt/myapp/package.json
 
-    - name: run js
+    - name: install express & run js with forever
       shell: cd /opt/myapp/ && npm install express && forever start app.js
     
 
