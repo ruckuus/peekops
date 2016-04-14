@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Update Centos ....... "
+echo "Update Centos ........ "
       yum -y update
       
 
