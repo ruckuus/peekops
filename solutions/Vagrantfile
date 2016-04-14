@@ -1,71 +1,72 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-Vagrant.configure(2) do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+config.vm.boot_timeout = 600
+  config.vm.define "web" do |web|
+    web.vm.box = "puphpet/centos64-x64"
+    web.vm.hostname = 'web'
+    web.vm.box_url = "puphpet/centos64-x64"
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "base"
+    web.vm.network :private_network, ip: "192.168.99.101"
+    web.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
+    
+    web.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--name", "web"]
+      
+    web.vm.provision :shell, :path => "setup_web.sh"
+        
+    end
+  end
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  config.vm.define "db" do |db|
+    db.vm.box = "puphpet/centos64-x64"
+    db.vm.hostname = 'db'
+    db.vm.box_url = "puphpet/centos64-x64"
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+    db.vm.network :private_network, ip: "192.168.99.104"
+    
+    db.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--name", "db"]
+    end
+  end
+  
+  config.vm.define "cache1" do |cache1|
+    cache1.vm.box = "puphpet/centos64-x64"
+    cache1.vm.hostname = 'cache'
+    cache1.vm.box_url = "puphpet/centos64-x64"
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+    cache1.vm.network :private_network, ip: "192.168.99.103"
+    cache1.vm.network :forwarded_port, guest: 6379, host: 10322, id: "cache1"
+    
+    cache1.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--name", "cache1"]
+    
+    cache1.vm.provision :shell, :path => "setup_redis.sh"
+     
+      
+    end
+  end
+  
+  config.vm.define "apps" do |apps|
+    apps.vm.box = "puphpet/centos64-x64"
+    apps.vm.hostname = 'apps'
+    apps.vm.box_url = "puphpet/centos64-x64"
 
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
+    apps.vm.network :private_network, ip: "192.168.99.102"
+    apps.vm.network :forwarded_port, guest: 22, host: 10522, id: "ssh"
 
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
-  # such as FTP and Heroku are also available. See the documentation at
-  # https://docs.vagrantup.com/v2/push/atlas.html for more information.
-  # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
-  # end
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   sudo apt-get update
-  #   sudo apt-get install -y apache2
-  # SHELL
-end
+    apps.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--name", "apps"]
+      
+    apps.vm.provision :shell, :path => "setup_webapps.sh"
+    end
+  end
+  
+end 
