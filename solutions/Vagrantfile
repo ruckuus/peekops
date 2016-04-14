@@ -1,18 +1,92 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Created by : S. Aditya. W 
+# E-Mail : adit3a@gmail.com
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+  config.vm.define "web" do |web|
+    web.vm.box = "ubuntu/trusty64"
+    web.vm.hostname = 'web'
+
+    web.vm.network :private_network, ip: "192.168.99.101"
+    web.vm.network "forwarded_port", guest:80, host: 8080
+
+    web.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 384]
+      v.customize ["modifyvm", :id, "--name", "web"]
+    end
+
+    # web.vm.provision "shell", inline: <<-SHELL      
+    # ...
+    # SHELL
+    web.vm.provision "shell", path: "config/web_install.sh"
+
+  end
+
+  config.vm.define "application" do |app|
+    app.vm.box = "ubuntu/trusty64"
+    app.vm.hostname = 'application'
+    app.vm.synced_folder "../", "/vagrant-data"
+
+    app.vm.network :private_network, ip: "192.168.99.102"
+    app.vm.network "forwarded_port", guest:3000, host: 3000
+
+    app.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 384]
+      v.customize ["modifyvm", :id, "--name", "application"]
+    end
+
+    app.vm.provision "shell", path: "config/app_install.sh"
+  end
+
+config.vm.define "cache" do |cache|
+    cache.vm.box = "ubuntu/trusty64"
+    cache.vm.hostname = 'cache'
+
+    cache.vm.network :private_network, ip: "192.168.99.103"
+    cache.vm.network "forwarded_port", guest:6379, host: 6379
+
+    cache.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 384]
+      v.customize ["modifyvm", :id, "--name", "cache"]
+    end
+
+    cache.vm.provision "shell", path: "config/cache_install.sh"
+
+  end
+
+  config.vm.define "postgresql" do |psql|
+    psql.vm.box = "ubuntu/trusty64"
+    psql.vm.hostname = 'postgresql'
+
+    psql.vm.network :private_network, ip: "192.168.99.104"
+    psql.vm.network "forwarded_port", guest:5432, host: 5432
+
+    psql.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 384]
+      v.customize ["modifyvm", :id, "--name", "postgresql"]
+    end
+
+    psql.vm.provision "shell", path: "config/postgresql_install.sh"
+
+  end
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "base"
+  # config.vm.box = "base"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
