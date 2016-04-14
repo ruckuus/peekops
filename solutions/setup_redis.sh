@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Stop Services"              
+echo "Stop Services "              
       /etc/init.d/postfix stop
       /etc/init.d/sshd stop 
 
