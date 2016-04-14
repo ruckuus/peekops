@@ -1,16 +1,16 @@
 #!/bin/bash
 
-echo "Stop Services"              
+echo "Stop Services."              
       /etc/init.d/postfix stop
       /etc/init.d/sshd stop 
       
-echo "Install PostgreSQL"
+echo "Install PostgreSQL."
       /usr/bin/yum -y install postgresql postgresql-contrib
       chkconfig postgresql on                   
       /etc/init.d/postgresql initdb
       /etc/init.d/postgresql start  
       
-echo "Setting Firewall"
+echo "Setting Firewall."
       
       /sbin/iptables -P INPUT DROP
       /sbin/iptables -P OUTPUT ACCEPT
