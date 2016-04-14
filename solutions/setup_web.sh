@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Provisioning Web Virtual Machine ..."
+echo "Provisioning Web Virtual Machine ... "
 echo "Install NGINX"
       if [ -x /usr/bin/nginx ]; then
         echo "NGINX Installed"
