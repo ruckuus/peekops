@@ -1,7 +1,7 @@
 provider "aws" {
-  region = "ap-southeast-1"
-  access_key = "ACCESS_KEY"
-  secret_key = "SECRET_KEY"
+  region = "ap-southeast-1a"
+  access_key = "AKIAJ4LH6ACCQS6OKZ5A"
+  secret_key = "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"
 }
 
 resource "aws_vpc" "peekops_main" {
@@ -269,10 +269,10 @@ resource "aws_autoscaling_group" "peekops_app" {
 resource "aws_instance" "bastion" {
   connection {
     user = "ubuntu"
-    key_file = "/path/to/private/key/terraform.pem"
+    key_file = "/home/ubuntu/.ssh/terraform.pem"
   }
 
-  ami = "ami-YOURAMIID"
+  ami = "ami-25c00c46"
   instance_type = "t2.micro"
   availability_zone = ""
   ebs_optimized = "false"
@@ -287,13 +287,13 @@ resource "aws_instance" "bastion" {
 }
 
 #### Application
-resource "aws_instance" "application" {
+resource "aws_instance" "application_a" {
   connection {
     user = "ubuntu"
-    key_file = "/path/to/private/key/terraform.pem"
+    key_file = "/home/ubuntu/.ssh/terraform.pem"
   }
 
-  ami = "ami-YOURAMIID"
+  ami = "ami-25c00c46"
   instance_type = "t2.micro"
   availability_zone = ""
   ebs_optimized = "false"
@@ -303,10 +303,117 @@ resource "aws_instance" "application" {
   vpc_security_group_ids = ["${aws_security_group.peekops_main_app.id}"]
   subnet_id = "${aws_subnet.peekops_main_app_a.id}"
   tags {
-     Name = "peekops_application"
+     Name = "peekops_application_a"
+  }
+  provisioner "local-exec" {
+     command = "sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y install openssh-server && sudo apt-get -y install npm && cd /home/ubuntu && sudo mkdir express && cd express && sudo npm init && sudo npm install express --save && sudo npm install express"
+  }
+}
+
+resource "aws_instance" "application_b" {
+  connection {
+    user = "ubuntu"
+    key_file = "/home/ubuntu/.ssh/terraform.pem"
+  }
+
+  ami = "ami-25c00c46"
+  instance_type = "t2.micro"
+  availability_zone = ""
+  ebs_optimized = "false"
+  disable_api_termination = "true"
+  instance_initiated_shutdown_behavior = "stop"
+  key_name = "terraform"
+  vpc_security_group_ids = ["${aws_security_group.peekops_main_app.id}"]
+  subnet_id = "${aws_subnet.peekops_main_app_b.id}"
+  tags {
+     Name = "peekops_application_b"
+  }
+  provisioner "local-exec" {
+     command = "sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y install openssh-server && sudo apt-get -y install npm && cd /home/ubuntu && sudo mkdir express && cd express && sudo npm init && sudo npm install express --save && sudo npm install express"
   }
 }
 
 ##### Web
+
+resource "aws_instance" "web_a" {
+  connection {
+    user = "ubuntu"
+    key_file = "/home/ubuntu/.ssh/terraform.pem"
+  }
+
+  ami = "ami-25c00c46"
+  instance_type = "t2.micro"
+  availability_zone = ""
+  ebs_optimized = "false"
+  disable_api_termination = "true"
+  instance_initiated_shutdown_behavior = "stop"
+  key_name = "terraform"
+  vpc_security_group_ids = ["${aws_security_group.peekops_main_elb.id}"]
+  subnet_id = "${aws_subnet.peekops_main_elb_a.id}"
+  tags {
+     Name = "peekops_web_a"
+  }
+  provisioner "local-exec" {
+     command = "sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y install openssh-server && sudo apt-get -y install nginx"
+  }
+}
+
+resource "aws_instance" "web_b" {
+  connection {
+    user = "ubuntu"
+    key_file = "/home/ubuntu/.ssh/terraform.pem"
+  }
+
+  ami = "ami-25c00c46"
+  instance_type = "t2.micro"
+  availability_zone = ""
+  ebs_optimized = "false"
+  disable_api_termination = "true"
+  instance_initiated_shutdown_behavior = "stop"
+  key_name = "terraform"
+  vpc_security_group_ids = ["${aws_security_group.peekops_main_elb.id}"]
+  subnet_id = "${aws_subnet.peekops_main_elb_b.id}"
+  tags {
+     Name = "peekops_web_b"
+  }
+  provisioner "local-exec" {
+     command = "sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y install openssh-server && sudo apt-get -y install nginx"
+  }
+}
+
 ##### DB (You will need to launch RDS)
+
+resource "aws_db_instance" "main_db_a" {
+  allocated_storage    = 10
+  engine               = "postgres"
+  engine_version       = "9.5.2"
+  instance_class       = "db.t2.micro"
+  name                 = "terraform"
+  username             = "terraform"
+  password             = "terraform2016"
+  db_subnet_group_name = "${aws_subnet.peekops_main_db_a.id}"
+  parameter_group_name = "default.postgres9.5"
+}
+
+resource "aws_db_instance" "main_db_b" {
+  allocated_storage    = 10
+  engine               = "postgres"
+  engine_version       = "9.5.2"
+  instance_class       = "db.t2.micro"
+  name                 = "terraform"
+  username             = "terraform"
+  password             = "terraform2016"
+  db_subnet_group_name = "${aws_subnet.peekops_main_db_b.id}"
+  parameter_group_name = "default.postgres9.5"
+}
+
 ##### Cache (You will need to launch ElastiCache instance)
+
+resource "aws_elasticache_cluster" "redis" {
+    cluster_id = "cluster-terraform"
+    engine = "redis"
+    node_type = "cache.m3.medium"
+    port = 11211
+    num_cache_nodes = 1
+    parameter_group_name = "default.redis2.8"
+}
